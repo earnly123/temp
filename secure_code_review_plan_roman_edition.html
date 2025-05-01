@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Android Secure App - Developer Checklist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        h1, h2 {
+            color: #0056b3; /* Dark blue */
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 5px;
+        }
+        .purpose, .usage, .status-codes, .summary {
+            background-color: #e9ecef;
+            border-left: 5px solid #0056b3;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .table-container {
+            overflow-x: auto; /* Allows horizontal scrolling on small screens */
+            background-color: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top; /* Align content to the top of the cell */
+        }
+        th {
+            background-color: #dee2e6; /* Light gray */
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2; /* Zebra striping for rows */
+        }
+        .section-title {
+            background-color: #adb5bd; /* Mid gray */
+            font-weight: bold;
+            color: #fff;
+            text-align: center;
+            padding: 12px;
+        }
+        code {
+            background-color: #e0e0e0;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 0.9em;
+        }
+        /* Define specific column widths where helpful, use % for flexibility */
+        /* Example: Make Status column narrow */
+        /* th:nth-child(6), td:nth-child(6) { */
+        /*    width: 5%;  */
+        /*    text-align: center; */
+        /* } */
+        /* Example: Make Notes wider if needed */
+        /* th:nth-child(7), td:nth-child(7) { */
+        /*    width: 25%; */
+        /* } */
+
+        /* Adjust input field style for the summary */
+        .summary input[type="text"], .summary textarea {
+             width: 95%; /* Adjusted to prevent overflow due to padding/borders */
+             padding: 8px;
+             margin-top: 5px;
+             margin-bottom: 10px;
+             border: 1px solid #ccc;
+             border-radius: 4px;
+             box-sizing: border-box; /* Include padding and border in element's total width and height */
+        }
+         .summary textarea {
+             height: 60px; /* Set a default height for textarea */
+             resize: vertical; /* Allow vertical resizing */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Android Secure App - Developer Code & Artifact Checklist</h1>
+    <p><strong>Checklist Version:</strong> 1.0 | <strong>Date:</strong> [Current Date]</p>
+
+
+    <div class="usage">
+        <h2>Usage Guide</h2>
+        <ul>
+            <li><strong>Developers:</strong> Use this checklist <em>as you code</em> to ensure requirements are met. Reference the relevant items before committing code related to specific areas.</li>
+            <li><strong>Code Reviewers:</strong> Use this checklist as a primary guide during Pull Request (PR) reviews. Verify the specific checks related to the changed code.</li>
+            <li><strong>QA/Security:</strong> Use specific sections for targeted white-box or gray-box verification.</li>
+        </ul>
+    </div>
+
+    <div class="status-codes">
+        <h2>Status Codes</h2>
+        <p>
+            <strong>✅</strong> = Verified Correct / Implemented <br>
+            <strong>❌</strong> = Issue Found / Not Implemented <br>
+            <strong>NA</strong> = Not Applicable (for the specific code change/review)
+        </p>
+    </div>
+
+    <h2>Checklist Items</h2>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Area</th>
+                    <th>Check Item / Requirement</th>
+                    <th>Files / Code Locations to Check</th>
+                    <th>Verification Method / Notes</th>
+                    <th>Status</th>
+                    <th>Reviewer Notes / Issue ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Section: Secure Data Storage (At Rest) -->
+                <tr><td colspan="7" class="section-title">1. Secure Data Storage (At Rest)</td></tr>
+                <tr>
+                    <td>1.1</td>
+                    <td>Storage Encryption</td>
+                    <td>No sensitive data stored in standard <code>SharedPreferences</code>.</td>
+                    <td>Search codebase for <code>getSharedPreferences(name, mode)</code>. Usage outside dedicated secure abstraction/wrapper is prohibited.</td>
+                    <td>Verify usage of <code>androidx.security.crypto.EncryptedSharedPreferences</code> wrapper.</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>1.2</td>
+                    <td>Storage Encryption</td>
+                    <td>No sensitive data stored in unencrypted standard Files.</td>
+                    <td>Search codebase for <code>FileInputStream</code>, <code>FileOutputStream</code>, <code>File.writeText</code>, <code>File.readText</code>. Usage outside secure wrapper.</td>
+                    <td>Verify usage of <code>androidx.security.crypto.EncryptedFile</code> for sensitive file operations.</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>1.3</td>
+                    <td>Storage Encryption</td>
+                    <td>Sensitive database storage uses robust encryption (e.g., SQLCipher).</td>
+                    <td>Check Room <code>DatabaseBuilder</code> or SQLite <code>OpenHelper</code> initialization.</td>
+                    <td>Verify initialization uses SQLCipher library with a strong passphrase derived securely (e.g., from Keystore).</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>1.4</td>
+                    <td>Key Management</td>
+                    <td>Encryption keys generated and managed ONLY via Android Keystore.</td>
+                    <td>Search for <code>KeyStore.getInstance("AndroidKeyStore")</code>, <code>KeyGenParameterSpec</code>, <code>KeyGenerator.getInstance("AES", "AndroidKeyStore")</code>.</td>
+                    <td>Confirm key generation/retrieval uses <code>AndroidKeyStore</code> provider. No hardcoded keys.</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>1.5</td>
+                    <td>Key Management</td>
+                    <td>Keystore keys configured for hardware-backed storage if available/required.</td>
+                    <td>Check <code>KeyGenParameterSpec.Builder</code> options.</td>
+                    <td>Verify <code>setIsStrongBoxBacked(true)</code> is attempted, or hardware-security is targeted.</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>1.6</td>
+                    <td>Key Management</td>
+                    <td>Keystore key access tied to user authentication where appropriate (e.g., unlock needed).</td>
+                    <td>Check <code>KeyGenParameterSpec.Builder</code> options.</td>
+                    <td>Verify <code>setUserAuthenticationRequired(true)</code> is used for keys protecting user-specific data needing explicit unlock.</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>1.7</td>
+                    <td>Key Management</td>
+                    <td>Appropriate cryptographic algorithms used (e.g., AES-GCM).</td>
+                    <td>Check <code>KeyGenParameterSpec.Builder</code> algorithms and modes (<code>BlockMode.GCM</code>, <code>EncryptionPadding.NoPadding</code>).</td>
+                    <td>Confirm modern, recommended algorithms and modes (avoid ECB mode, weak padding).</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                 <tr>
+                    <td>1.8</td>
+                    <td>Memory Management</td>
+                    <td>Sensitive data (keys, passwords, PII) in <code>ByteArray</code>/<code>char[]</code> explicitly zeroed after use.</td>
+                    <td>Review code sections handling sensitive byte/char arrays. Search for patterns like <code>Arrays.fill(secretArray, (byte) 0)</code>.</td>
+                    <td>Manual code inspection. Absence of explicit zeroing is an issue.</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                 <tr>
+                    <td>1.9</td>
+                    <td>Memory Management</td>
+                    <td>Avoid storing highly sensitive data (e.g., raw passwords) in immutable <code>String</code> objects.</td>
+                    <td>Review variable declarations holding sensitive data.</td>
+                    <td>Prioritize <code>char[]</code> for passwords/keys where possible, handle <code>String</code> instances carefully (minimize scope, avoid logging).</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+                <!-- Section: Secure Data Transfer (In Transit) -->
+                <tr><td colspan="7" class="section-title">2. Secure Data Transfer (In Transit)</td></tr>
+                <tr>
+                    <td>2.1</td>
+                    <td>Network Security</td>
+                    <td>ALL network traffic uses HTTPS (TLS 1.2+ enforced).</td>
+                    <td><code>res/xml/network_security_config.xml</code>, Networking client setup (OkHttp/Retrofit builder).</td>
+                    <td>Verify <code>&lt;base-config cleartextTrafficPermitted="false"&gt;</code> in config. Check client enforces HTTPS scheme.</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>2.2</td>
+                    <td>Network Security</td>
+                    <td>Network Security Configuration file is properly declared in <code>AndroidManifest.xml</code>.</td>
+                    <td><code>AndroidManifest.xml</code> (<code>&lt;application android:networkSecurityConfig="@xml/network_security_config"&gt;</code>).</td>
+                    <td>Confirm attribute points to the correct XML file.</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>2.3</td>
+                    <td>Network Security</td>
+                    <td>Certificate Pinning implemented for critical API endpoints.</td>
+                    <td>Networking client setup (e.g., OkHttp <code>CertificatePinner.Builder</code>).</td>
+                    <td>Verify pinning configuration is present, uses secure hashes (SHA-256), and pins appropriate certificates.</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>2.4</td>
+                    <td>API Security</td>
+                    <td>Authentication tokens (Access/Refresh) stored securely.</td>
+                    <td>Check token storage mechanism (e.g., class saving tokens).</td>
+                    <td>Verify storage uses <code>EncryptedSharedPreferences</code> (See 1.1).</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                 <tr>
+                    <td>2.5</td>
+                    <td>API Security</td>
+                    <td>Secure API authentication mechanism implemented (e.g., OAuth 2.0 + PKCE).</td>
+                    <td>Check authentication flows, networking interceptors adding auth headers.</td>
+                    <td>Verify implementation adheres to chosen standard, secure token handling (e.g., no tokens in URL params).</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>2.6</td>
+                    <td>API Security</td>
+                    <td>Secure logout mechanism implemented (client-side token clearing AND server-side invalidation).</td>
+                    <td>Logout functions/logic.</td>
+                    <td>Verify local tokens are securely deleted AND an API call is made to invalidate server session/tokens.</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+                <!-- Section: Authentication & Authorization -->
+                <tr><td colspan="7" class="section-title">3. Authentication & Authorization</td></tr>
+                <tr>
+                    <td>3.1</td>
+                    <td>Authentication</td>
+                    <td>Biometric authentication uses <code>androidx.biometric.BiometricPrompt</code>.</td>
+                    <td>Search for <code>BiometricPrompt</code> usage.</td>
+                    <td>Verify correct API usage, including handling of errors and fallback to device credentials.</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                 <tr>
+                    <td>3.2</td>
+                    <td>Authentication</td>
+                    <td>Biometrics are linked to device credentials (PIN/Pattern/Password required).</td>
+                    <td>Check <code>BiometricPrompt.PromptInfo.Builder</code> configuration.</td>
+                    <td>Verify <code>setDeviceCredentialAllowed(true)</code> or <code>setAllowedAuthenticators(BIOMETRIC_STRONG | DEVICE_CREDENTIAL)</code> is used.</td>
+                    <td></td>
+                    <td></td>
+                 </tr>
+                 <tr>
+                    <td>3.3</td>
+                    <td>Authentication</td>
+                    <td>Biometrics used for key access utilizes <code>BiometricPrompt</code> with <code>CryptoObject</code>.</td>
+                    <td>Check <code>BiometricPrompt.authenticate()</code> calls requiring cryptographic operations.</td>
+                    <td>Verify a <code>CryptoObject</code> wrapping the Keystore cipher/signature/mac is passed correctly.</td>
+                    <td></td>
+                    <td></td>
+                 </tr>
+                <tr>
+                    <td>3.4</td>
+                    <td>Session Management</td>
+                    <td>Client-side idle timeout implemented leading to re-authentication or logout.</td>
+                    <td>Check base Activities/Fragments, Application class lifecycle listeners.</td>
+                    <td>Verify mechanism exists to track user inactivity and trigger lock screen/logout after defined period.</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+                <!-- Section: Secure Coding Practices -->
+                <tr><td colspan="7" class="section-title">4. Secure Coding Practices</td></tr>
+                <tr>
+                    <td>4.1</td>
+                    <td>Input Validation</td>
+                    <td>All external inputs (User UI, API responses, Intents, Deep Links) are validated.</td>
+                    <td>Check code handling <code>EditText</code>, data models parsed from JSON, <code>getIntent().getData()</code>, Activity/Fragment arguments.</td>
+                    <td>Verify presence of explicit checks (type, length, format, range, sanitization) before using external data. Use allow-lists.</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                 <tr>
+                    <td>4.2</td>
+                    <td>Secrets Management</td>
+                    <td>No API keys, encryption keys, or other secrets hardcoded in source code or resources.</td>
+                    <td>Search <code>.java</code>/<code>.kt</code> files, <code>res/values/strings.xml</code>, <code>build.gradle</code> files for suspicious hardcoded strings.</td>
+                    <td>Verify absence of hardcoded secrets. Secrets should be fetched securely post-auth or injected via secure build mechanisms.</td>
+                    <td></td>
+                    <td></td>
+                 </tr>
+                 <tr>
+                    <td>4.3</td>
+                    <td>Logging</td>
+                    <td>No sensitive data (PII, passwords, tokens, full tax details) logged.</td>
+                    <td>Search codebase for all <code>Log.d/i/w/e</code>, <code>println</code>, or other logging framework calls.</td>
+                    <td>Verify parameters passed to logs do not contain sensitive info. Review any custom data object <code>.toString()</code> methods.</td>
+                    <td></td>
+                    <td></td>
+                 </tr>
+                 <tr>
+                    <td>4.4</td>
+                    <td>Logging</td>
+                    <td>Verbose logging disabled in release builds (via ProGuard/R8).</td>
+                    <td>Check <code>proguard-rules.pro</code> or R8 configuration.</td>
+                    <td>Verify rules exist to strip <code>android.util.Log</code> calls (e.g., <code>assumenosideeffects</code>).</td>
+                    <td></td>
+                    <td></td>
+                 </tr>
+                 <tr>
+                    <td>4.5</td>
+                    <td>Obfuscation</td>
+                    <td>Code obfuscation and minimization are enabled for release builds.</td>
+                    <td>Check app-level <code>build.gradle</code> (<code>android -&gt; buildTypes -&gt; release</code>).</td>
+                    <td>Verify <code>minifyEnabled true</code> and <code>shrinkResources true</code>.</td>
+                    <td></td>
+                    <td></td>
+                 </tr>
+                <tr>
+                    <td>4.6</td>
+                    <td>Obfuscation</td>
+                    <td>ProGuard/R8 rules are reasonably strict (avoid excessive <code>-keep</code> rules).</td>
+                    <td>Check <code>proguard-rules.pro</code>.</td>
+                    <td>Review rules to ensure they don't unnecessarily prevent obfuscation of large parts of the codebase.</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                 <tr>
+                    <td>4.7</td>
+                    <td>WebView Security</td>
+                    <td><code>setJavaScriptEnabled(true)</code> used only when absolutely necessary and on trusted content.</td>
+                    <td>Check <code>WebView</code> initialization code.</td>
+                    <td>Scrutinize any instance where JavaScript is enabled. Default should be false.</td>
+                    <td></td>
+                    <td></td>
+                 </tr>
+                <tr>
+                    <td>4.8</td>
+                    <td>WebView Security</td>
+                    <td>JavaScript Interfaces (<code>addJavascriptInterface</code>) are avoided or meticulously secured.</td>
+                    <td>Search codebase for <code>addJavascriptInterface</code>.</td>
+                    <td>Usage requires extreme caution and security review. Ensure exposed methods are minimal and <code>@JavascriptInterface</code> used.</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>4.9</td>
+                    <td>WebView Security</td>
+                    <td>File system access disabled for WebViews.</td>
+                    <td>Check <code>WebView</code> settings (<code>WebSettings</code>).</td>
+                    <td>Verify <code>setAllowFileAccess(false)</code> is set.</td>
+                    <td></td>
+                    <td></td>
+                 </tr>
+                 <tr>
+                    <td>4.10</td>
+                    <td>WebView Security</td>
+                    <td>Content loaded via HTTPS only within WebViews.</td>
+                    <td>Check <code>WebView.loadUrl()</code>, <code>WebView.loadData()</code> calls.</td>
+                    <td>Verify all URLs use <code>https://</code>. Avoid loading data with base URLs allowing insecure schemes. Use <code>WebViewAssetLoader</code> for local.</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                 <tr>
+                    <td>4.11</td>
+                    <td>Screen Security</td>
+                    <td>Sensitive screens prevent content capture and visibility in recents task list.</td>
+                    <td>Check <code>Activity</code>/<code>Fragment</code> <code>onCreate</code>/<code>onResume</code>. Search for <code>FLAG_SECURE</code>.</td>
+                    <td>Verify <code>window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)</code> is called.</td>
+                    <td></td>
+                    <td></td>
+                 </tr>
+                 <tr>
+                    <td>4.12</td>
+                    <td>Root/Tamper Check</td>
+                    <td>Root detection or Environment Integrity checks are implemented (if required).</td>
+                    <td>Check for code/libraries related to root detection, <code>SafetyNet</code>, <code>Play Integrity API</code>.</td>
+                    <td>Verify implementation exists and results are handled appropriately (e.g., logging, blocking features, informing user).</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+                <!-- Section: Build & Manifest Configuration -->
+                <tr><td colspan="7" class="section-title">5. Build & Manifest Configuration</td></tr>
+                <tr>
+                    <td>5.1</td>
+                    <td>Manifest Security</td>
+                    <td><code>android:debuggable="false"</code> for release builds.</td>
+                    <td><code>AndroidManifest.xml</code> (check final merged manifest if necessary). Build variants configuration in <code>build.gradle</code>.</td>
+                    <td>Build a release APK and verify <code>aapt dump badging</code> output shows <code>debuggable="false"</code>.</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>5.2</td>
+                    <td>Manifest Security</td>
+                    <td><code>android:allowBackup="false"</code> set in the <code>&lt;application&gt;</code> tag.</td>
+                    <td><code>AndroidManifest.xml</code>.</td>
+                    <td>Verify attribute is present and set to <code>false</code> to prevent ADB backup of app data.</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>5.3</td>
+                    <td>Manifest Security</td>
+                    <td>Minimize exported components (Activities, Services, Receivers, Providers).</td>
+                    <td><code>AndroidManifest.xml</code>.</td>
+                    <td>Review all component declarations. Ensure <code>android:exported="false"</code> unless explicitly required for OS/App interaction. Check Intent Filters.</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>5.4</td>
+                    <td>Manifest Security</td>
+                    <td>Permissions requested are minimal and justified (<code>uses-permission</code>).</td>
+                    <td><code>AndroidManifest.xml</code>.</td>
+                    <td>Review all requested permissions. Each must be strictly necessary for app functionality. Avoid <code>dangerous</code> permissions unless vital. Provide justification.</td>
+                    <td></td>
+                    <td></td>
+                 </tr>
+                 <tr>
+                    <td>5.5</td>
+                    <td>Manifest Security</td>
+                    <td>Signature-level protection used for closely cooperating private components (if applicable).</td>
+                    <td><code>AndroidManifest.xml</code> (<code>android:protectionLevel="signature"</code>).</td>
+                    <td>Verify usage if internal app components communicate securely.</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+                <!-- Section: Dependencies -->
+                <tr><td colspan="7" class="section-title">6. Dependencies</td></tr>
+                <tr>
+                    <td>6.1</td>
+                    <td>Dependency Mgt</td>
+                    <td>Dependencies regularly scanned for known vulnerabilities (CVEs).</td>
+                    <td>CI/CD pipeline configuration (e.g., OWASP Dependency-Check, Snyk integration), Scan reports.</td>
+                    <td>Confirm automated scanning tool is integrated and runs regularly. Review latest reports for unaddressed vulnerabilities.</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>6.2</td>
+                    <td>Dependency Mgt</td>
+                    <td>Dependencies kept reasonably up-to-date, especially for security patches.</td>
+                    <td><code>build.gradle</code> files (app and module level).</td>
+                    <td>Review dependency versions. Outdated libraries with known security fixes must be prioritized for update.</td>
+                    <td></td>
+                    <td></td>
+                 </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="summary">
+        <h2>Review Summary</h2>
+        <form action="#" method="post"> <!-- Placeholder form action -->
+             <div>
+                 <label for="reviewDate"><strong>Date:</strong></label><br>
+                 <input type="date" id="reviewDate" name="reviewDate"><br>
+             </div>
+             <div>
+                 <label for="reviewers"><strong>Reviewer(s):</strong></label><br>
+                 <input type="text" id="reviewers" name="reviewers" placeholder="Names of reviewers"><br>
+             </div>
+             <div>
+                <label for="codeVersion"><strong>Code Version / PR Link:</strong></label><br>
+                 <input type="text" id="codeVersion" name="codeVersion" placeholder="e.g., Commit SHA, PR #123"><br>
+            </div>
+             <div>
+                <label for="overallStatus"><strong>Overall Status:</strong></label><br>
+                 <select id="overallStatus" name="overallStatus">
+                     <option value="">Select Status...</option>
+                     <option value="Approved">Approved</option>
+                     <option value="ApprovedMinor">Approved with Minor Issues</option>
+                     <option value="NeedsChanges">Requires Major Changes</option>
+                </select><br><br> <!-- Added select for easier status -->
+            </div>
+             <div>
+                <label for="summaryNotes"><strong>Summary Notes:</strong> (Highlight critical findings or general assessment)</label><br>
+                 <textarea id="summaryNotes" name="summaryNotes" rows="4" placeholder="Enter summary notes here..."></textarea><br>
+             </div>
+             <!-- Add a submit button if this were to be integrated into a system -->
+             <!-- <button type="submit">Submit Summary</button> -->
+        </form>
+        <p><em>Remember: Server-side security is equally crucial and requires separate verification. This checklist is a living document and should be updated as needed.</em></p>
+    </div>
+
+</body>
+</html>

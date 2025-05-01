@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CI/CD Tool Recommendations for Secure Android App (GitHub Actions)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #17a2b8; /* Teal color */
+            border-bottom: 2px solid #17a2b8;
+            padding-bottom: 5px;
+        }
+        .intro, .important-notes {
+            background-color: #eef7f9;
+            border-left: 5px solid #17a2b8;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .table-container {
+            overflow-x: auto; /* Allows horizontal scrolling on small screens */
+            background-color: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px; /* Increased padding */
+            text-align: left;
+            vertical-align: top; /* Align content to the top */
+        }
+        th {
+            background-color: #e9ecef; /* Light gray */
+            font-weight: bold;
+            position: sticky; /* Make header sticky */
+            top: 0; /* Stick to the top on scroll */
+            z-index: 1; /* Ensure header stays above table body */
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2; /* Zebra striping */
+        }
+        /* Importance indicators */
+        .importance-critical { background-color: #dc3545; color: white; padding: 3px 6px; border-radius: 4px; font-weight: bold; }
+        .importance-high { background-color: #fd7e14; color: white; padding: 3px 6px; border-radius: 4px; font-weight: bold;}
+        .importance-medium { background-color: #ffc107; color: #333; padding: 3px 6px; border-radius: 4px; font-weight: bold;}
+        .cost-free { color: #28a745; font-weight: bold; }
+        .cost-paid { color: #dc3545; font-weight: bold; }
+        .cost-mixed { color: #fd7e14; font-weight: bold; } /* For tools with free tiers but paid features */
+        code {
+            background-color: #e0e0e0;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 0.9em;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>CI/CD Tool Recommendations for Secure Android App (GitHub Actions)</h1>
+        
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Tool / Action Name</th>
+                    <th>Primary Purpose</th>
+                    <th>Integration Method</th>
+                    <th>Free Tier / Cost Model</th>
+                    <th>Estimated Cost Indication</th>
+                    <th>Importance (Security Focus)</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Build & Test Foundation -->
+                <tr>
+                    <td><strong>Gradle Build & Unit Test</strong></td>
+                    <td>Compile code, run basic JVM unit tests.</td>
+                    <td>GitHub Actions Workflow (`run: ./gradlew build testDebugUnitTest`)</td>
+                    <td class="cost-free">Tools Free</td>
+                    <td>Consumes Runner Minutes</td>
+                    <td><span class="importance-critical">Critical</span></td>
+                    <td>Essential foundation. Uses standard GitHub Linux runners (or macOS/Windows).</td>
+                </tr>
+                 <tr>
+                    <td><a href="https://github.com/marketplace/actions/android-emulator-runner" target="_blank">Android Emulator Runner</a><br>(by `ReactiveCircus`)</td>
+                    <td>Run Android Instrumented (UI/Integration) tests on an emulator.</td>
+                    <td>GitHub Action</td>
+                    <td class="cost-free">Action Free</td>
+                    <td>Consumes Runner Minutes (Potentially high due to emulator startup/runtime)</td>
+                    <td><span class="importance-high">High</span></td>
+                    <td>Essential for UI testing. Requires KVM hardware acceleration (available on standard Linux runners). Configure API level, device profile etc.</td>
+                </tr>
+
+                <!-- Static Analysis & Security -->
+                <tr>
+                    <td><strong>Android Lint</strong></td>
+                    <td>Identify potential bugs, performance issues, and some security weaknesses in code & resources.</td>
+                    <td>GitHub Actions Workflow (`run: ./gradlew lintDebug`)</td>
+                    <td class="cost-free">Tool Free</td>
+                    <td>Consumes Runner Minutes</td>
+                    <td><span class="importance-high">High</span></td>
+                    <td>Basic static analysis built into Android Gradle Plugin. Crucial for baseline quality/security.</td>
+                </tr>
+                <tr>
+                    <td><strong>Detekt / Ktlint</strong></td>
+                    <td>Kotlin static analysis & formatting enforcement.</td>
+                    <td>GitHub Actions Workflow (`run: ./gradlew detekt`/`ktlintCheck`)</td>
+                    <td class="cost-free">Tools Free</td>
+                    <td>Consumes Runner Minutes</td>
+                    <td><span class="importance-medium">Medium</span></td>
+                    <td>Enhances code consistency and quality, which indirectly helps security by reducing complex/buggy code.</td>
+                </tr>
+                 <tr>
+                    <td><a href="https://github.com/features/code-scanning" target="_blank">GitHub CodeQL (Code Scanning)</a></td>
+                    <td>Static Application Security Testing (SAST) - find security vulnerabilities in code.</td>
+                    <td>GitHub Action (`github/codeql-action`)</td>
+                    <td class="cost-mixed">Free for Public Repos / Included in GitHub Advanced Security (GHAS) for Private Repos.</td>
+                    <td>Free / GHAS License ($$$)</td>
+                    <td><span class="importance-critical">Critical</span></td>
+                    <td>Powerful SAST tool deeply integrated with GitHub. Supports Java/Kotlin. GHAS is per-developer cost.</td>
+                 </tr>
+                 <tr>
+                    <td><a href="https://github.com/features/dependabot" target="_blank">GitHub Dependabot</a></td>
+                    <td>Dependency vulnerability scanning (CVEs) & automated updates.</td>
+                    <td>Built-in GitHub Feature (+ Optional Actions)</td>
+                    <td class="cost-mixed">Alerts free / Code Scanning benefits need GHAS for private repos.</td>
+                    <td>Free / GHAS License ($$$)</td>
+                    <td><span class="importance-critical">Critical</span></td>
+                    <td>Essential for tracking vulnerable libraries. Can automatically create PRs to update dependencies.</td>
+                 </tr>
+                <tr>
+                    <td><a href="https://github.com/dependency-check/Dependency-Check_Action" target="_blank">OWASP Dependency-Check Action</a></td>
+                    <td>Dependency vulnerability scanning (alternative/supplement to Dependabot).</td>
+                    <td>GitHub Action</td>
+                    <td class="cost-free">Tool & Action Free</td>
+                    <td>Consumes Runner Minutes</td>
+                    <td><span class="importance-medium">Medium</span></td>
+                    <td>Good open-source option. Can provide more detailed reports locally or in CI artifacts. Might find slightly different CVEs than Dependabot.</td>
+                </tr>
+                <tr>
+                    <td><a href="https://github.com/features/secret-scanning" target="_blank">GitHub Secret Scanning</a></td>
+                    <td>Detect hardcoded secrets (API keys, passwords) committed to the repository.</td>
+                    <td>Built-in GitHub Feature</td>
+                    <td class="cost-mixed">Free for Public Repos / Included in GHAS for Private Repos.</td>
+                    <td>Free / GHAS License ($$$)</td>
+                    <td><span class="importance-critical">Critical</span></td>
+                    <td>Automatically scans pushes. Vital for preventing credential leaks.</td>
+                </tr>
+                 <tr>
+                    <td><a href="https://github.com/marketplace/actions/trufflehog-opensrc" target="_blank">TruffleHog Action</a></td>
+                    <td>Open-source secrets scanning tool.</td>
+                    <td>GitHub Action</td>
+                     <td class="cost-free">Tool & Action Free</td>
+                     <td>Consumes Runner Minutes</td>
+                     <td><span class="importance-medium">Medium</span></td>
+                    <td>Good alternative/supplement to GitHub's native secret scanning, especially if not using GHAS. More configurable entropy scanning.</td>
+                 </tr>
+                <tr>
+                     <td><a href="https://sonarcloud.io/" target="_blank">SonarCloud</a> / <a href="https://www.sonarqube.org/" target="_blank">SonarQube</a></td>
+                     <td>Comprehensive Code Quality & Security Platform (SAST, code smells, coverage).</td>
+                     <td>GitHub Action (`sonarsource/sonarcloud-github-action` or `sonarqube-scan-action`)</td>
+                     <td class="cost-mixed">SonarCloud: Free for Public/OSS, Paid for Private. SonarQube: Community Edition Free (Self-hosted), Paid Editions ($$-$$$$).</td>
+                     <td>Free / Paid ($$-$$$$)</td>
+                     <td><span class="importance-high">High</span></td>
+                     <td>Provides detailed dashboards and quality gates. Can overlap with CodeQL/Lint but offers broader quality metrics. Requires external account setup.</td>
+                 </tr>
+
+                <!-- Build & Release -->
+                <tr>
+                     <td><a href="https://github.com/marketplace/actions/sign-android-release" target="_blank">Sign Android Release</a><br>(by `r0adkll`)</td>
+                     <td>Sign Android App Bundles (.aab) or APKs.</td>
+                     <td>GitHub Action</td>
+                     <td class="cost-free">Action Free</td>
+                     <td>Consumes Runner Minutes</td>
+                     <td><span class="importance-critical">Critical</span></td>
+                     <td>Securely signs release builds using keys stored in GitHub Secrets (base64 encoded keystore file + passwords).</td>
+                 </tr>
+                 <tr>
+                    <td><a href="https://github.com/marketplace/actions/upload-android-release-to-google-play" target="_blank">Upload to Google Play</a><br>(by `r0adkll` or `google-actions`)</td>
+                    <td>Upload signed AAB/APK to Google Play Console tracks (internal, alpha, beta, production).</td>
+                    <td>GitHub Action</td>
+                    <td class="cost-free">Action Free</td>
+                    <td>Consumes Runner Minutes</td>
+                    <td><span class="importance-high">High</span></td>
+                    <td>Requires setting up a Google Play Service Account and storing its JSON key securely in GitHub Secrets.</td>
+                 </tr>
+
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
