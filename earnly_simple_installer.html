@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase App Distribution Guide - Earnly Beta</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Variables */
+        :root {
+            --primary-blue: #1E5C97;
+            --light-blue: #3A7BBF;
+            --dark-blue: #0A3A6A;
+            --accent-blue: #62B0E8;
+            --background-color: #F5F9FF;
+            --card-bg: white;
+            --text-color: #333;
+            --text-light: #666;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --warning-color: #f39c12;
+            --border-radius: 10px;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --font-primary: 'Poppins', sans-serif;
+        }
+
+        /* Global Styles */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: var(--font-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .mb-3 { margin-bottom: 1.5rem; }
+        .mb-4 { margin-bottom: 2rem; }
+        .mb-5 { margin-bottom: 3rem; }
+
+        .mt-1 { margin-top: 0.5rem; }
+        .mt-2 { margin-top: 1rem; }
+        .mt-3 { margin-top: 1.5rem; }
+        .mt-4 { margin-top: 2rem; }
+        .mt-5 { margin-top: 3rem; }
+
+        /* Layout Components */
+        header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            color: white;
+            padding: 30px 0;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-content {
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+
+        .beta-badge {
+            background-color: rgba(0, 0, 0, 0.2);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .main-content {
+            padding: 60px 0;
+        }
+
+        /* Card Components */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto 40px;
+            position: relative;
+        }
+
+        .card h2 {
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 24px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .card h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary-blue), var(--accent-blue));
+            border-radius: 2px;
+        }
+
+        /* Steps Styling */
+        .steps-container {
+            padding: 20px 0;
+        }
+
+        .step {
+            display: flex;
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            flex-shrink: 0;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(30, 92, 151, 0.3);
+        }
+
+        .step-content {
+            flex-grow: 1;
+        }
+
+        .step-content h3 {
+            color: var(--dark-blue);
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .step-image {
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 15px;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+            height: 200px;
+            background-color: #f1f1f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .step-image img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Images */
+        .img-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .img-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* FAQ Styling */
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #f5f9ff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .faq-item {
+            margin-bottom: 1px;
+            border-radius: 0;
+            overflow: hidden;
+            box-shadow: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            padding: 20px;
+            background-color: white;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #333;
+        }
+
+        .faq-answer {
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        /* Support Section */
+        .support-info {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 10px;
+        }
+
+        /* Footer Styling */
+        footer {
+            background-color: var(--dark-blue);
+            color: white;
+            padding: 40px 0 20px;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .card {
+                padding: 30px;
+                margin-bottom: 30px;
+            }
+            
+            .logo {
+                font-size: 28px;
+            }
+            
+            .tagline {
+                font-size: 16px;
+            }
+            
+            .header-content {
+                padding: 20px 0;
+            }
+            
+            .main-content {
+                padding: 40px 0;
+            }
+            
+            .step {
+                flex-direction: column;
+            }
+            
+            .step-number {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 20px;
+            }
+            
+            .card h2 {
+                font-size: 20px;
+            }
+            
+            .step-image {
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <div class="header-content text-center">
+                <div class="logo">Earnly</div>
+                <div class="beta-badge">FIREBASE APP DISTRIBUTION GUIDE</div>
+                <p class="tagline">Installation instructions for Earnly Beta Testers</p>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Introduction Card -->
+            <div class="card">
+                <h2>Welcome to the Earnly Beta Testing Program</h2>
+                <p class="text-center mb-4">Thank you for participating in our beta testing program. This guide will walk you through the process of installing and testing the Earnly app using Firebase App Distribution.</p>
+                
+                <div class="img-container">
+                    <img src="/api/placeholder/500/250" alt="Earnly App Preview">
+                </div>
+                
+                <p class="mb-2"><strong>Important:</strong> As mentioned in our testing plan, we'll be using Firebase App Distribution for secure beta testing. This requires a specific installation process that is different from typical app store downloads.</p>
+                
+                <p>Please follow the steps below carefully to ensure successful installation of the test app.</p>
+            </div>
+            
+            <!-- Firebase Installation Guide -->
+            <div class="card">
+                <h2>Firebase App Distribution Process</h2>
+                
+                <div class="steps-container">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>Receive Email Invitation</h3>
+                            <p>You will receive an email invitation from Firebase App Distribution with the subject line "<strong>You're invited to test Earnly</strong>".</p>
+                            <p>This email will contain a "Get Started" button that you need to click to begin the process.</p>
+                            <div class="step-image">
+                                <img src="/api/placeholder/500/250" alt="Email Invitation">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>Accept the Invitation</h3>
+                            <p><strong>Important:</strong> Open the email invitation on your Android device.</p>
+                            <p>Sign in with your Google account when prompted and click "Accept invitation".</p>
+                            <p>This will take you to a web page where you'll be prompted to download the Firebase App Tester application.</p>
+                            <div class="step-image">
+                                <img src="/api/placeholder/500/250" alt="Accept Invitation">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>Download Firebase App Tester</h3>
+                            <p>You will be prompted to download the Firebase App Tester app (which is not available on Google Play Store).</p>
+                            <p>Tap "DOWNLOAD" on the prompt that appears.</p>
+                            <p><strong>Note:</strong> If you don't see the download prompt, visit <a href="https://appdistribution.firebase.google.com">appdistribution.firebase.google.com</a> directly on your Android device.</p>
+                            <div class="step-image">
+                                <img src="/api/placeholder/500/250" alt="Download Firebase App Tester">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3>Enable Unknown Sources</h3>
+                            <p>You will see a security warning since the app is not from the Google Play Store.</p>
+                            <p>Go to Settings > Security > Install unknown apps and enable permission for your browser.</p>
+                            <p>Return to the download and tap "INSTALL".</p>
+                            <div class="step-image">
+                                <img src="/api/placeholder/500/250" alt="Enable Unknown Sources">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h3>Open Firebase App Tester</h3>
+                            <p>After installation completes, open the Firebase App Tester app.</p>
+                            <p>Sign in with the same Google account you used to accept the invitation.</p>
+                            <p>You will see a list of available test apps, including Earnly.</p>
+                            <div class="step-image">
+                                <img src="/api/placeholder/500/250" alt="Open Firebase App Tester">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <h3>Install Earnly Test App</h3>
+                            <p>In the Firebase App Tester, select the Earnly app and tap "DOWNLOAD" next to the latest version.</p>
+                            <p>You may need to approve installation from unknown sources again, this time for the Firebase App Tester.</p>
+                            <p>Tap "INSTALL" to complete the installation.</p>
+                            <div class="step-image">
+                                <img src="/api/placeholder/500/250" alt="Install Earnly App">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">7</div>
+                        <div class="step-content">
+                            <h3>Launch and Test Earnly</h3>
+                            <p>The Earnly app will now be available on your device's home screen.</p>
+                            <p>Open the app and log in with your test credentials (which will be provided separately).</p>
+                            <p>Explore the app features according to the testing guidelines.</p>
+                            <div class="step-image">
+                                <img src="/api/placeholder/500/250" alt="Launch Earnly">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">8</div>
+                        <div class="step-content">
+                            <h3>Receive Updates</h3>
+                            <p>When new builds are available during the testing period, you'll receive email notifications.</p>
+                            <p>You can also check for updates directly in the Firebase App Tester app.</p>
+                            <p>Simply download and install new versions as they become available.</p>
+                            <div class="step-image">
+                                <img src="/api/placeholder/500/250" alt="Receive Updates">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Common Issues Section -->
+            <div class="card">
+                <h2>Common Issues and Troubleshooting</h2>
+                
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <div class="faq-question">Cannot find Firebase App Tester on Google Play Store</div>
+                        <div class="faq-answer">
+                            <p>The Firebase App Tester is not available on the Google Play Store. You must download it through the invitation email or by visiting <a href="https://appdistribution.firebase.google.com">appdistribution.firebase.google.com</a> directly on your Android device.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">Already accepted invitation but need to install on a different device</div>
+                        <div class="faq-answer">
+                            <p>If you've already accepted the invitation but need to install the app on a different device, you can visit <a href="https://appdistribution.firebase.google.com">appdistribution.firebase.google.com</a> directly on the new device. Sign in with the same Google account you used to accept the invitation.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">Installation fails with "App not installed" error</div>
+                        <div class="faq-answer">
+                            <p>This can happen if you previously installed a version of the app from a different source (like Google Play). To fix this issue:</p>
+                            <ol>
+                                <li>Uninstall any existing version of the Earnly app</li>
+                                <li>Ensure you have enough storage space on your device</li>
+                                <li>Try the installation process again</li>
+                            </ol>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">Browser shows desktop view of installation page</div>
+                        <div class="faq-answer">
+                            <p>If your browser displays the desktop version of the Firebase page, look for an option to "Request mobile site" in your browser settings. Alternatively, try using a different mobile browser.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">Not receiving notification emails about new builds</div>
+                        <div class="faq-answer">
+                            <p>Check your spam folder to ensure notifications aren't being filtered. You can also check for new builds directly in the Firebase App Tester application by opening it and refreshing the app list.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="support-info mt-4">
+                    <h3 class="mb-2">Need Help?</h3>
+                    <p>If you encounter any issues not covered above, please contact the beta testing team at:</p>
+                    <p><strong>Email:</strong> betatest@earnly.com</p>
+                    <p><strong>Support Hours:</strong> Monday-Friday, 9am-5pm GMT</p>
+                </div>
+            </div>
+            
+            <!-- Feedback Section -->
+            <div class="card">
+                <h2>Providing Feedback</h2>
+                
+                <p class="mb-3">Your feedback is crucial to improving the Earnly app before its public release. Please follow these guidelines when reporting issues or providing feedback:</p>
+                
+                <ol class="mb-4">
+                    <li class="mb-2"><strong>Use the in-app feedback option</strong> - Look for the feedback button in the app's settings menu</li>
+                    <li class="mb-2"><strong>Include detailed information</strong> - Device model, operating system version, app version, and steps to reproduce any issues</li>
+                    <li class="mb-2"><strong>Provide screenshots</strong> - Visual evidence helps us understand and fix problems more quickly</li>
+                    <li class="mb-2"><strong>Suggest improvements</strong> - We value your ideas about features and user experience</li>
+                    <li class="mb-2"><strong>Report issues promptly</strong> - The sooner we know about problems, the sooner we can fix them</li>
+                </ol>
+                
+                <p>You can also send feedback directly to <strong>betatest@earnly.com</strong> if you prefer email communication.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-logo">Earnly</div>
+            <p>Thank you for participating in our beta testing program.</p>
+            <p>Your feedback is invaluable in helping us create the best possible financial tracking experience.</p>
+            <p class="copyright">&copy; 2025 Earnly. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
