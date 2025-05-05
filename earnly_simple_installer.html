@@ -5,30 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Firebase App Distribution Guide - Earnly Beta</title>
     
-    <!-- Fonts -->
+    <!-- Fonts - Using Montserrat and Lato from brand guidelines -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     
     <style>
-        /* Variables */
+        /* Variables - Based on Earnly Brand Guidelines v1.3 */
         :root {
-            --primary-blue: #1E5C97;
-            --light-blue: #3A7BBF;
-            --dark-blue: #0A3A6A;
-            --accent-blue: #62B0E8;
+            --primary-blue: #004AAD; /* Cobolt Blue - primary brand color */
+            --light-blue: #004AAD80; /* Cobolt Blue at 50% */
+            --dark-blue: #004AAD; /* Using the same cobolt blue */
+            --accent-green: #00BF63; /* Secondary color - Green */
+            --accent-orange: #FF954D; /* Secondary color - Orange */
             --background-color: #F5F9FF;
             --card-bg: white;
             --text-color: #333;
-            --text-light: #666;
-            --success-color: #28a745;
+            --text-light: #878787; /* Mid Grey from guidelines */
+            --success-color: #00BF63; /* Using brand green for success */
             --error-color: #dc3545;
-            --warning-color: #f39c12;
+            --warning-color: #FF954D; /* Using brand orange for warnings */
             --border-radius: 10px;
             --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
             --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
             --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
-            --font-primary: 'Poppins', sans-serif;
+            --font-primary: 'Montserrat', sans-serif; /* Primary font from guidelines */
+            --font-secondary: 'Lato', sans-serif; /* Secondary font from guidelines */
         }
 
         /* Global Styles */
@@ -45,10 +47,14 @@
         body {
             background-color: var(--background-color);
             color: var(--text-color);
-            font-family: var(--font-primary);
+            font-family: var(--font-secondary); /* Using Lato for body text */
             line-height: 1.6;
             overflow-x: hidden;
             position: relative;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-primary); /* Using Montserrat for headings */
         }
 
         .container {
@@ -75,7 +81,7 @@
 
         /* Layout Components */
         header {
-            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            background: var(--primary-blue); /* Using Cobolt Blue from guidelines */
             color: white;
             padding: 30px 0;
             box-shadow: var(--shadow-md);
@@ -89,6 +95,7 @@
             font-size: 36px;
             font-weight: 700;
             margin-bottom: 10px;
+            font-family: var(--font-primary);
         }
 
         .tagline {
@@ -96,6 +103,7 @@
             opacity: 0.9;
             max-width: 600px;
             margin: 0 auto 20px;
+            font-family: var(--font-secondary);
         }
 
         .beta-badge {
@@ -110,6 +118,7 @@
             letter-spacing: 1px;
             margin-bottom: 20px;
             border: 1px solid rgba(255, 255, 255, 0.3);
+            font-family: var(--font-primary);
         }
 
         .main-content {
@@ -135,6 +144,7 @@
             font-size: 24px;
             position: relative;
             padding-bottom: 15px;
+            font-family: var(--font-primary);
         }
 
         .card h2::after {
@@ -145,7 +155,7 @@
             transform: translateX(-50%);
             width: 60px;
             height: 4px;
-            background: linear-gradient(to right, var(--primary-blue), var(--accent-blue));
+            background: var(--primary-blue); /* Using Cobolt Blue from guidelines */
             border-radius: 2px;
         }
 
@@ -164,7 +174,7 @@
         }
 
         .step-number {
-            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            background: var(--primary-blue); /* Using Cobolt Blue from guidelines */
             color: white;
             width: 40px;
             height: 40px;
@@ -175,7 +185,8 @@
             margin-right: 20px;
             flex-shrink: 0;
             font-weight: bold;
-            box-shadow: 0 2px 8px rgba(30, 92, 151, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 74, 173, 0.3); /* Using cobolt blue for shadow */
+            font-family: var(--font-primary);
         }
 
         .step-content {
@@ -183,9 +194,10 @@
         }
 
         .step-content h3 {
-            color: var(--dark-blue);
+            color: var(--primary-blue); /* Using Cobolt Blue from guidelines */
             margin-bottom: 10px;
             font-size: 18px;
+            font-family: var(--font-primary);
         }
 
         .step-image {
@@ -249,11 +261,13 @@
             justify-content: space-between;
             align-items: center;
             color: #333;
+            font-family: var(--font-primary);
         }
 
         .faq-answer {
             padding: 20px;
             background-color: #f9f9f9;
+            font-family: var(--font-secondary);
         }
 
         /* Support Section */
@@ -266,7 +280,7 @@
 
         /* Footer Styling */
         footer {
-            background-color: var(--dark-blue);
+            background-color: var(--primary-blue); /* Using Cobolt Blue from guidelines */
             color: white;
             padding: 40px 0 20px;
             text-align: center;
@@ -276,12 +290,14 @@
             font-size: 24px;
             font-weight: 700;
             margin-bottom: 20px;
+            font-family: var(--font-primary);
         }
 
         .copyright {
             color: rgba(255, 255, 255, 0.6);
             font-size: 14px;
             margin-top: 20px;
+            font-family: var(--font-secondary);
         }
 
         /* Responsive Adjustments */
@@ -329,6 +345,19 @@
             .step-image {
                 height: 150px;
             }
+        }
+
+        /* Success & Error indicators based on brand colors */
+        .success {
+            color: var(--success-color);
+        }
+        
+        .error {
+            color: var(--error-color);
+        }
+        
+        .warning {
+            color: var(--warning-color);
         }
     </style>
 </head>
