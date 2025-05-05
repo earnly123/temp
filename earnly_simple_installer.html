@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,8 +15,7 @@
         /* Variables - Based on Earnly Brand Guidelines v1.3 */
         :root {
             --primary-blue: #004AAD; /* Cobolt Blue - primary brand color */
-            --light-blue: #004AAD80; /* Cobolt Blue at 50% */
-            --dark-blue: #004AAD; /* Using the same cobolt blue */
+            --turquoise: #4BD1B5; /* App icon color from screenshots */
             --accent-green: #00BF63; /* Secondary color - Green */
             --accent-orange: #FF954D; /* Secondary color - Orange */
             --background-color: #F5F9FF;
@@ -206,7 +206,9 @@
             margin-top: 15px;
             position: relative;
             box-shadow: var(--shadow-sm);
-            height: 200px;
+            max-width: 360px;
+            margin-left: auto;
+            margin-right: auto;
             background-color: #f1f1f1;
             display: flex;
             align-items: center;
@@ -216,6 +218,7 @@
         .step-image img {
             max-width: 100%;
             height: auto;
+            border-radius: 8px;
         }
 
         /* Images */
@@ -229,6 +232,22 @@
             height: auto;
             border-radius: 10px;
             box-shadow: var(--shadow-md);
+        }
+
+        /* App icon styling */
+        .app-icon {
+            background-color: var(--turquoise);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+            margin: 0 auto 20px;
+            font-family: var(--font-primary);
         }
 
         /* FAQ Styling */
@@ -300,6 +319,33 @@
             font-family: var(--font-secondary);
         }
 
+        /* Language note styling */
+        .language-note {
+            background-color: rgba(0, 74, 173, 0.1);
+            border-left: 4px solid var(--primary-blue);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .language-note p {
+            margin: 0;
+        }
+        
+        .language-note ul {
+            margin-top: 10px;
+            margin-bottom: 0;
+            padding-left: 20px;
+        }
+        
+        .language-note li {
+            margin-bottom: 5px;
+        }
+        
+        .language-note li:last-child {
+            margin-bottom: 0;
+        }
+
         /* Responsive Adjustments */
         @media (max-width: 768px) {
             .card {
@@ -341,10 +387,6 @@
             .card h2 {
                 font-size: 20px;
             }
-            
-            .step-image {
-                height: 150px;
-            }
         }
 
         /* Success & Error indicators based on brand colors */
@@ -379,10 +421,13 @@
             <!-- Introduction Card -->
             <div class="card">
                 <h2>Welcome to the Earnly Beta Testing Program</h2>
+                
+                <div class="app-icon">E</div>
+                
                 <p class="text-center mb-4">Thank you for participating in our beta testing program. This guide will walk you through the process of installing and testing the Earnly app using Firebase App Distribution.</p>
                 
-                <div class="img-container">
-                    <img src="/api/placeholder/500/250" alt="Earnly App Preview">
+                <div class="language-note">
+                    <p><strong>Note:</strong> Some screenshots in this guide show the Firebase interface in Ukrainian. The actual language you see may depend on your device settings.</p>
                 </div>
                 
                 <p class="mb-2"><strong>Important:</strong> As mentioned in our testing plan, we'll be using Firebase App Distribution for secure beta testing. This requires a specific installation process that is different from typical app store downloads.</p>
@@ -402,7 +447,7 @@
                             <p>You will receive an email invitation from Firebase App Distribution with the subject line "<strong>You're invited to test Earnly</strong>".</p>
                             <p>This email will contain a "Get Started" button that you need to click to begin the process.</p>
                             <div class="step-image">
-                                <img src="/api/placeholder/500/250" alt="Email Invitation">
+                                <img src="images/firebase_invitation_email.png" alt="Firebase invitation email showing Earnly app icon and installation instructions">
                             </div>
                         </div>
                     </div>
@@ -413,9 +458,9 @@
                             <h3>Accept the Invitation</h3>
                             <p><strong>Important:</strong> Open the email invitation on your Android device.</p>
                             <p>Sign in with your Google account when prompted and click "Accept invitation".</p>
-                            <p>This will take you to a web page where you'll be prompted to download the Firebase App Tester application.</p>
+                            <p>You will be directed to a webpage where you'll need to sign in and accept the invitation to test the app.</p>
                             <div class="step-image">
-                                <img src="/api/placeholder/500/250" alt="Accept Invitation">
+                                <img src="images/accept_invitation.jpg" alt="Firebase App Distribution invitation acceptance screen">
                             </div>
                         </div>
                     </div>
@@ -424,11 +469,11 @@
                         <div class="step-number">3</div>
                         <div class="step-content">
                             <h3>Download Firebase App Tester</h3>
-                            <p>You will be prompted to download the Firebase App Tester app (which is not available on Google Play Store).</p>
-                            <p>Tap "DOWNLOAD" on the prompt that appears.</p>
+                            <p>You will be prompted to download the Firebase App Tester app. This is a special app that manages beta test installations and is not available on Google Play Store.</p>
+                            <p>Tap "DOWNLOAD" or "Завантажити App Tester" on the prompt that appears.</p>
                             <p><strong>Note:</strong> If you don't see the download prompt, visit <a href="https://appdistribution.firebase.google.com">appdistribution.firebase.google.com</a> directly on your Android device.</p>
                             <div class="step-image">
-                                <img src="/api/placeholder/500/250" alt="Download Firebase App Tester">
+                                <img src="images/firebase_download.jpg" alt="Download prompt for Firebase App Tester showing an orange app icon">
                             </div>
                         </div>
                     </div>
@@ -438,10 +483,10 @@
                         <div class="step-content">
                             <h3>Enable Unknown Sources</h3>
                             <p>You will see a security warning since the app is not from the Google Play Store.</p>
-                            <p>Go to Settings > Security > Install unknown apps and enable permission for your browser.</p>
-                            <p>Return to the download and tap "INSTALL".</p>
+                            <p>You'll need to allow installation from unknown sources. Your device will show a message like "З міркувань безпеки на вашому телефоні зараз заборонено встановлювати невідомі додатки з цього джерела".</p>
+                            <p>Tap "Settings" (Налаштування) to open your device's security settings, then enable the option to allow installations from this source.</p>
                             <div class="step-image">
-                                <img src="/api/placeholder/500/250" alt="Enable Unknown Sources">
+                                <img src="images/unknown_sources.jpg" alt="Security warning about installing apps from unknown sources">
                             </div>
                         </div>
                     </div>
@@ -451,10 +496,10 @@
                         <div class="step-content">
                             <h3>Open Firebase App Tester</h3>
                             <p>After installation completes, open the Firebase App Tester app.</p>
-                            <p>Sign in with the same Google account you used to accept the invitation.</p>
-                            <p>You will see a list of available test apps, including Earnly.</p>
+                            <p>Sign in with the same Google account you used to accept the invitation. You may need to grant permissions for the app to collect device information for testing purposes.</p>
+                            <p>You will see a list of available test apps, including Earnly (co.uk.earnly.android).</p>
                             <div class="step-image">
-                                <img src="/api/placeholder/500/250" alt="Open Firebase App Tester">
+                                <img src="images/app_tester_login.jpg" alt="Firebase App Tester showing login screen with Google sign-in button">
                             </div>
                         </div>
                     </div>
@@ -463,11 +508,11 @@
                         <div class="step-number">6</div>
                         <div class="step-content">
                             <h3>Install Earnly Test App</h3>
-                            <p>In the Firebase App Tester, select the Earnly app and tap "DOWNLOAD" next to the latest version.</p>
+                            <p>In the Firebase App Tester, select the Earnly app and tap "DOWNLOAD" (Завантажити) next to the latest version (currently 1.0.13).</p>
                             <p>You may need to approve installation from unknown sources again, this time for the Firebase App Tester.</p>
-                            <p>Tap "INSTALL" to complete the installation.</p>
+                            <p>Tap "INSTALL" (Установити) to complete the installation.</p>
                             <div class="step-image">
-                                <img src="/api/placeholder/500/250" alt="Install Earnly App">
+                                <img src="images/earnly_app_list.jpg" alt="Firebase App Tester showing Earnly app in the test apps list">
                             </div>
                         </div>
                     </div>
@@ -475,12 +520,12 @@
                     <div class="step">
                         <div class="step-number">7</div>
                         <div class="step-content">
-                            <h3>Launch and Test Earnly</h3>
-                            <p>The Earnly app will now be available on your device's home screen.</p>
-                            <p>Open the app and log in with your test credentials (which will be provided separately).</p>
-                            <p>Explore the app features according to the testing guidelines.</p>
+                            <h3>Install from Unknown Sources</h3>
+                            <p>When you attempt to install the Earnly app, you may see another security prompt about installing apps from unknown sources.</p>
+                            <p>Tap "SETTINGS" (Налаштування) and enable the permission for Firebase App Tester.</p>
+                            <p>Return to the installation and tap "INSTALL" (Установити) to continue.</p>
                             <div class="step-image">
-                                <img src="/api/placeholder/500/250" alt="Launch Earnly">
+                                <img src="images/earnly_install_prompt.jpg" alt="Installation prompt for Earnly app showing the app icon">
                             </div>
                         </div>
                     </div>
@@ -488,15 +533,26 @@
                     <div class="step">
                         <div class="step-number">8</div>
                         <div class="step-content">
-                            <h3>Receive Updates</h3>
-                            <p>When new builds are available during the testing period, you'll receive email notifications.</p>
-                            <p>You can also check for updates directly in the Firebase App Tester app.</p>
-                            <p>Simply download and install new versions as they become available.</p>
+                            <h3>Launch and Test Earnly</h3>
+                            <p>The Earnly app will now be available on your device's home screen, showing the turquoise icon with an "E".</p>
+                            <p>Open the app and log in with your test credentials (which will be provided separately).</p>
+                            <p>Explore the app features according to the testing guidelines, with particular focus on the newly released News feature.</p>
                             <div class="step-image">
-                                <img src="/api/placeholder/500/250" alt="Receive Updates">
+                                <img src="images/earnly_app_detail.jpg" alt="Earnly app details page showing app version and release notes">
                             </div>
                         </div>
                     </div>
+                </div>
+                
+                <div class="language-note mb-3">
+                    <p><strong>Important:</strong> The Firebase App Tester interface may show text in your device's system language. Common buttons and their translations:</p>
+                    <ul>
+                        <li><strong>Download</strong> = Завантажити</li>
+                        <li><strong>Install</strong> = Установити</li>
+                        <li><strong>Cancel</strong> = Скасувати</li>
+                        <li><strong>Settings</strong> = Налаштування</li>
+                        <li><strong>Continue</strong> = Продовжити</li>
+                    </ul>
                 </div>
             </div>
             
@@ -532,9 +588,16 @@
                     </div>
                     
                     <div class="faq-item">
-                        <div class="faq-question">Browser shows desktop view of installation page</div>
+                        <div class="faq-question">Cannot enable installation from unknown sources</div>
                         <div class="faq-answer">
-                            <p>If your browser displays the desktop version of the Firebase page, look for an option to "Request mobile site" in your browser settings. Alternatively, try using a different mobile browser.</p>
+                            <p>The exact steps to enable installation from unknown sources vary by device manufacturer and Android version. Generally, you can:</p>
+                            <ol>
+                                <li>Open your device Settings</li>
+                                <li>Go to Security or Privacy</li>
+                                <li>Look for "Install unknown apps" or "Unknown sources"</li>
+                                <li>Select your browser app and toggle the permission on</li>
+                            </ol>
+                            <p>On some devices, you'll only be prompted to enable this when actually installing the app.</p>
                         </div>
                     </div>
                     
@@ -549,9 +612,27 @@
                 <div class="support-info mt-4">
                     <h3 class="mb-2">Need Help?</h3>
                     <p>If you encounter any issues not covered above, please contact the beta testing team at:</p>
-                    <p><strong>Email:</strong> betatest@earnly.com</p>
+                    <p><strong>Email:</strong> adam.marsh@earnly.co.uk</p>
                     <p><strong>Support Hours:</strong> Monday-Friday, 9am-5pm GMT</p>
                 </div>
+            </div>
+            
+            <!-- App Features Section -->
+            <div class="card">
+                <h2>Current Features to Test</h2>
+                
+                <p class="mb-3">The current version (1.0.13) includes the new News feature with the following functionality:</p>
+                
+                <ul class="mb-4">
+                    <li class="mb-2"><strong>Personalized Financial Updates</strong> - Tax alerts and economic insights directly relevant to your financial situation</li>
+                    <li class="mb-2"><strong>Multi-level Filtering System</strong> - Filter content by categories and subcategories</li>
+                    <li class="mb-2"><strong>Navigation Tabs</strong> - Easily switch between All, My News, UK News, and World News sections</li>
+                    <li class="mb-2"><strong>Year Filtering</strong> - Access historical content from 2022-2025 with a simple filter system</li>
+                    <li class="mb-2"><strong>Dynamic Subcategories</strong> - Filter by specialized topics like Tax Updates, Budget News, Economy, and more</li>
+                    <li class="mb-2"><strong>"How does this affect me?" feature</strong> - Shows personalized impact of tax and financial updates</li>
+                </ul>
+                
+                <p>When testing, please pay particular attention to the news filtering system and the personalization features. We'd like feedback on the relevance of the "How does this affect me?" calculations and the ease of finding information relevant to your specific financial situation.</p>
             </div>
             
             <!-- Feedback Section -->
@@ -568,7 +649,7 @@
                     <li class="mb-2"><strong>Report issues promptly</strong> - The sooner we know about problems, the sooner we can fix them</li>
                 </ol>
                 
-                <p>You can also send feedback directly to <strong>betatest@earnly.com</strong> if you prefer email communication.</p>
+                <p>You can also send feedback directly to <strong>adam.marsh@earnly.co.uk</strong> if you prefer email communication.</p>
             </div>
         </div>
     </div>
